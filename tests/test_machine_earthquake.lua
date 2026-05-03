@@ -9,8 +9,9 @@ local Machine = _G["Machine"]
 
 TestMachineEarthquake = {}
 
--- Vérifie qu’un tremblement de terre n’incrémente pas total_usage
--- mais incrémente bien times_used
+--- Vérifie qu'un tremblement de terre incrémente times_used mais pas total_usage.
+---
+--- Cas testé : incrementUsageCounts(false, true) → times_used = 1, total_usage = 0
 function TestMachineEarthquake:testEarthquakeDoesNotIncrementTotalUsage()
   local fake_machine = setmetatable({}, { __index = Machine })
 
@@ -23,7 +24,9 @@ function TestMachineEarthquake:testEarthquakeDoesNotIncrementTotalUsage()
   lu.assertEquals(fake_machine.total_usage, 0)
 end
 
--- Vérifie qu’une utilisation normale (pas tremblement de terre) incrémente tous les compteurs
+--- Vérifie qu'une utilisation normale incrémente à la fois times_used et total_usage.
+---
+--- Cas testé : incrementUsageCounts(false, false) → times_used = 1, total_usage = 1
 function TestMachineEarthquake:testNormalUsageIncrementsTotalUsage()
   local fake_machine = setmetatable({}, { __index = Machine })
 
@@ -36,7 +39,9 @@ function TestMachineEarthquake:testNormalUsageIncrementsTotalUsage()
   lu.assertEquals(fake_machine.total_usage, 1)
 end
 
--- Vérifie que total_usage_only n’incrémente pas times_used mais incrémente total_usage
+--- Vérifie que le mode total_usage_only incrémente total_usage mais pas times_used.
+---
+--- Cas testé : incrementUsageCounts(true, false) → times_used = 0, total_usage = 1
 function TestMachineEarthquake:testTotalUsageOnlyDoesNotIncrementTimesUsed()
   local fake_machine = setmetatable({}, { __index = Machine })
 
@@ -49,7 +54,9 @@ function TestMachineEarthquake:testTotalUsageOnlyDoesNotIncrementTimesUsed()
   lu.assertEquals(fake_machine.total_usage, 1)
 end
 
--- Vérifie qu’un tremblement de terre incrémente times_used sans modifier total_usage
+--- Vérifie qu'un tremblement de terre n'altère pas un total_usage déjà existant.
+---
+--- Cas testé : incrementUsageCounts(false, true) avec times_used=5, total_usage=10 → times_used = 6, total_usage = 10
 function TestMachineEarthquake:testEarthquakeKeepsExistingTotalUsage()
   local fake_machine = setmetatable({}, { __index = Machine })
 
